@@ -1,4 +1,4 @@
-package mock.common;
+package mock.events;
 
 import mock.events.EventDto;
 import org.springframework.stereotype.Component;

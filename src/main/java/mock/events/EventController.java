@@ -1,6 +1,5 @@
 package mock.events;
 
-import mock.common.EventValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
