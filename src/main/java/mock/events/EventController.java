@@ -1,11 +1,12 @@
 package mock.events;
 
+import mock.common.EventValidator;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,6 +24,9 @@ public class EventController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private EventValidator validator;
+
 //허나 모델메퍼를 사용하면 Reflection이 발생하긴 한다.
 //    리플렉션(Reflection)이란?
 //    자바에서 제공하는 리플렉션(Reflection)은 C, C++과 같은 언어를 비롯한 다른 언어에서는 볼 수 없는 기능입니다. 이미 로딩이 완료된 클래스에서 또 다른 클래스를 동적으로 로딩(Dynamic Loading)하여 생성자(Constructor), 멤버 필드(Member Variables) 그리고 멤버 메서드(Member Method) 등을 사용할 수 있도록 합니다.
@@ -34,6 +38,10 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
 
+        validator.validate(eventDto, errors);
+        if(errors.hasErrors()){
+            return ResponseEntity.badRequest().build();
+        }
 //        Event event = Event.builder()     ModelMapper가 없으면 이것처럼 다 날코딩 해야 한다.
 //                .name(eventDto.getName())
 //                .description(eventDto.getDescription())
