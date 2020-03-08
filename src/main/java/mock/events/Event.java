@@ -28,7 +28,21 @@ public class Event {
     @Enumerated (EnumType.STRING)
     private EventStatus eventStatus = EventStatus.DRAFT;
 
-    
+
+    public void update() {
+        // Update free
+        if (this.basePrice == 0 && this.maxPrice == 0) {
+            this.free = true;
+        } else {
+            this.free = false;
+        }
+        // Update offline
+        if (this.location == null || this.location.isEmpty()) {
+            this.offline = false;
+        } else {
+            this.offline = true;
+        }
+    }
 }
 //● 왜 @EqualsAndHasCode에서 of를 사용하는가
 // 나중에 객체간에 연관관계가 있을 떄 서로 참조하는 경우가 발생하면 stack overflow가 발생할 수 있다.
