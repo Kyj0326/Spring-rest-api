@@ -1,0 +1,6 @@
+spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+#  deserialization은 제이슨 -> 객체를 의미
+#  serialization은 객체 -> 제이슨을 의미
