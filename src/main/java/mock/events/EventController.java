@@ -3,6 +3,7 @@ package mock.events;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -48,8 +49,13 @@ public class EventController {
         Event event = modelMapper.map(eventDto, Event.class);
         event.update();
         Event newEvent = repository.save(event);
-        URI createdUri =  linkTo(EventController.class).slash(newEvent.getId()).toUri();
-        return ResponseEntity.created(createdUri).body(event);
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(EventController.class).slash(newEvent.getId());
+        URI createdUri =  selfLinkBuilder.toUri();
+        EventResource eventResouce = new EventResource(event);
+        eventResouce.add(linkTo(EventController.class).withRel("query-events"));
+
+        eventResouce.add(selfLinkBuilder.withRel("update-events"));
+        return ResponseEntity.created(createdUri).body(eventResouce);
     }
 
 
