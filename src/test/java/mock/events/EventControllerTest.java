@@ -92,6 +92,19 @@ public class EventControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void createEvent_Bad_Request_Empty_Input() throws Exception {
+        EventDto event = EventDto.builder().build();
+
+        mockMvc.perform(post("/api/events/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(event)))
+            .andExpect(status().isBadRequest());
+
+
+    }
+
 }
 
 //    Event 생성 API 구현: 입력값 이외에 에러 발생
@@ -101,3 +114,18 @@ public class EventControllerTest {
 //        테스트 할 것
 //        입력값으로 누가 id나 eventStatus, offline, free 이런 데이터까지 같이 주면?
 //        Bad_Request로 응답 vs 받기로 한 값 이외는 무시
+
+
+//    Event 생성 API 구현: 201 응답 받기
+//
+//@RestController
+//@ResponseBody를 모든 메소드에 적용한 것과 동일하다.
+//
+//        ResponseEntity를 사용하는 이유
+//        응답 코드, 헤더, 본문 모두 다루기 편한 API
+//
+//        Location URI 만들기
+//        HATEOS가 제공하는 linkTo(), methodOn() 사용
+//
+//        객체를 JSON으로 변환
+//        ObjectMapper 사용
