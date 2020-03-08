@@ -1,11 +1,14 @@
 package mock.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest
+@SpringBootTest // @SpringBootApplication 를 찾아서 그 밑의 모든 빈을 찾아서 등록한다.
+@AutoConfigureMockMvc
 public class EventControllerTest {
 
     @Autowired
@@ -29,12 +33,11 @@ public class EventControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @MockBean
-    EventRepository repository;
 
     @Test
     public void createEvent() throws Exception {
         Event event = Event.builder()
+                .id(100)
                 .name("Spring")
                 .description("REST API Development with Spring")
                 .beginEnrollmentDateTime(LocalDateTime.of(2018, 11, 23, 14, 21))
@@ -45,8 +48,11 @@ public class EventControllerTest {
                 .maxPrice(200)
                 .limitOfEnrollment(100)
                 .location("강남역 D2 스타텁 팩토리")
+                .free(true)
+                .offline(false)
+                .eventStatus(EventStatus.PUBLISHED)
                 .build();
-        event.setId(10);
+
 //        Mockito.when(repository.save(event)).thenReturn(event);
 //        컨트롤러에는 dto를 받아서 변환해서 호출 했기 때문에 위의 것은 null을 받기 때문에 에러난다.
         mockMvc.perform(post("/api/events/")
@@ -58,7 +64,10 @@ public class EventControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id").exists())
                 .andExpect(header().exists(HttpHeaders.LOCATION))
-                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE));
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+                .andExpect(jsonPath("id").value(Matchers.not(100)))
+                .andExpect(jsonPath("free").value(Matchers.not(true)))
+                .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()));
 
     }
 }
