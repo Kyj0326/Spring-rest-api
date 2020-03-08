@@ -47,8 +47,8 @@ public class EventControllerTest {
                 .location("강남역 D2 스타텁 팩토리")
                 .build();
         event.setId(10);
-        Mockito.when(repository.save(event)).thenReturn(event);
-
+//        Mockito.when(repository.save(event)).thenReturn(event);
+//        컨트롤러에는 dto를 받아서 변환해서 호출 했기 때문에 위의 것은 null을 받기 때문에 에러난다.
         mockMvc.perform(post("/api/events/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaTypes.HAL_JSON)
