@@ -118,7 +118,7 @@ public class EventControllerTest {
                 .beginEnrollmentDateTime(LocalDateTime.of(2018, 11, 24, 14, 21))
                 .closeEnrollmentDateTime(LocalDateTime.of(2018, 11, 24, 14, 21))
                 .beginEventDateTime(LocalDateTime.of(2018, 11, 25, 14, 21))
-                .endEventDateTime(LocalDateTime.of(2018, 11, 26, 14, 21))
+                .endEventDateTime(LocalDateTime.of(2010, 11, 26, 14, 21))
                 .basePrice(10000)
                 .maxPrice(200)
                 .limitOfEnrollment(100)
@@ -128,8 +128,14 @@ public class EventControllerTest {
         mockMvc.perform(post("/api/events/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(event)))
-                .andExpect(status().isBadRequest());
-
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$[0].objectName").exists())
+                .andExpect(jsonPath("$[0].field").exists())
+                .andExpect(jsonPath("$[0].defaultMessage").exists())
+                .andExpect(jsonPath("$[0].code").exists())
+                .andExpect(jsonPath("$[0].rejectedValue").exists());
+    //테스트 꼼꼼하게 다 해야하지만~~~~~~~~~ 글로벌에러만있을 떄,, 두개다있을 떄 등등 우리는 시간관계상!!
 
     }
 

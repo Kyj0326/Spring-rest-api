@@ -34,12 +34,12 @@ public class EventController {
     @PostMapping(value = "/api/events", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors){
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(errors);
         }
 
         validator.validate(eventDto, errors);
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(errors);
         }
 //        Event event = Event.builder()     ModelMapper가 없으면 이것처럼 다 날코딩 해야 한다.
 //                .name(eventDto.getName())
