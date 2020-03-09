@@ -29,7 +29,6 @@ public class AppConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    @Bean
     public ApplicationRunner applicationRunner(){
         return new ApplicationRunner() {
 
