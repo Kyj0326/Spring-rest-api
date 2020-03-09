@@ -1,6 +1,7 @@
 package mock.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import mock.common.BaseControllerTest;
 import mock.common.RestDocsConfiguration;
 import mock.common.TestDescription;
 import org.hamcrest.Matchers;
@@ -30,24 +31,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest // @SpringBootApplication 를 찾아서 그 밑의 모든 빈을 찾아서 등록한다.
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class) // 다른 빈설정파일을 읽어와서 설정하는 방법 중 하나!
-public class EventControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+public class EventControllerTest extends BaseControllerTest {
 
-    @Autowired
-    ObjectMapper objectMapper;
 
     @Autowired
     EventRepository repository;
-
-    @Autowired
-    ModelMapper modelMapper;
 
     @Test
     @TestDescription(value = "정상적으로 이벤트를 발생 시키는 이벤트")
