@@ -1,5 +1,6 @@
 package mock.events;
 
+import mock.common.ErrorsResource;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -36,12 +37,12 @@ public class EventController {
     @PostMapping(value = "/api/events", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors){
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         validator.validate(eventDto, errors);
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 //        Event event = Event.builder()     ModelMapper가 없으면 이것처럼 다 날코딩 해야 한다.
 //                .name(eventDto.getName())
@@ -58,6 +59,10 @@ public class EventController {
 
         eventResouce.add(selfLinkBuilder.withRel("update-events"));
         return ResponseEntity.created(createdUri).body(eventResouce);
+    }
+
+    private ResponseEntity badRequest(Errors errors) {
+        return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 
 
