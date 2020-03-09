@@ -56,7 +56,7 @@ public class EventControllerTest extends BaseControllerTest {
 
 //        Mockito.when(repository.save(event)).thenReturn(event);
 //        컨트롤러에는 dto를 받아서 변환해서 호출 했기 때문에 위의 것은 null을 받기 때문에 에러난다.
-        mockMvc.perform(post("/api/events/")
+        mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsString(event)))
@@ -159,7 +159,7 @@ public class EventControllerTest extends BaseControllerTest {
     public void createEvent_Bad_Request_Empty_Input() throws Exception {
         EventDto event = EventDto.builder().build();
 
-        mockMvc.perform(post("/api/events/")
+        mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(event)))
             .andExpect(status().isBadRequest());
@@ -203,7 +203,7 @@ public class EventControllerTest extends BaseControllerTest {
         IntStream.range(0,30).forEach(this::generateEvent);
 
         //When
-        mockMvc.perform(get("/api/events/")
+        mockMvc.perform(get("/api/events")
                         .param("page","1")
                         .param("size","10")
                         .param("sort","name,DESC"))
