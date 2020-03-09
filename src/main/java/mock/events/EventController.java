@@ -87,9 +87,37 @@ public class EventController {
         eventResource.add(new Link("/docs/index.html#resources-events-get").withRel("profile"));
         return ResponseEntity.ok(eventResource) ;
 
-
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity updateEvent(@PathVariable Integer id, @RequestBody @Valid EventDto eventDto, Errors errors){
+
+        Optional<Event> optionalEvent = repository.findById(id);
+
+        if(optionalEvent.isPresent()==false){
+            return ResponseEntity.notFound().build();
+        }
+
+        if(errors.hasErrors()){
+            return badRequest(errors);
+        }
+
+        validator.validate(eventDto,errors);
+        if(errors.hasErrors()){
+            return badRequest(errors);
+        }
+
+        Event oldEvent = optionalEvent.get();
+        modelMapper.map(eventDto, oldEvent);
+        Event savedEvent = repository.save(oldEvent);
+
+        EventResource eventResource = new EventResource(savedEvent);
+        eventResource.add(new Link("/docs/index.html#resources-events-update").withRel("profile"));
+
+        return ResponseEntity.ok(eventResource);
+
+
+    }
 
 
 
