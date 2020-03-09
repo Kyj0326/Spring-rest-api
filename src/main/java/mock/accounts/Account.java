@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Getter @Setter @AllArgsConstructor
-@Builder @NoArgsConstructor @EqualsAndHashCode
+@Builder @NoArgsConstructor @EqualsAndHashCode (of = "id")
 public class Account {
 
     @Id @GeneratedValue
@@ -20,4 +20,5 @@ public class Account {
     @ElementCollection(fetch = FetchType.EAGER) // EAGER 즉시로딩, LAZY 는 지연로딩
     @Enumerated(EnumType.STRING)
     private Set<AccountRole> roles;
+
 }
